@@ -229,6 +229,20 @@ const { Content } = await render(project);
     background: rgba(240, 237, 230, 0.20);
     flex-shrink: 0;
   }
+
+  /* ── ↑ annotation lines ──────────────────────────────────────── */
+  .project-content :global(p.annotation) {
+    font-family: var(--font-mono);
+    font-size: 11px !important;
+    color: rgba(240, 237, 230, 0.40) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    margin-top: -2.5em;
+    margin-bottom: 3em;
+    max-width: none;
+    padding-left: 2px;
+  }
 </style>
 
 <script>
@@ -262,6 +276,13 @@ const { Content } = await render(project);
 
       p.parentNode!.insertBefore(figure, p);
       p.remove();
+    }
+  });
+
+  // ── Style ↑ annotation paragraphs as captions
+  document.querySelectorAll('.project-content p').forEach((p) => {
+    if (p.textContent?.trimStart().startsWith('↑')) {
+      p.classList.add('annotation');
     }
   });
 
