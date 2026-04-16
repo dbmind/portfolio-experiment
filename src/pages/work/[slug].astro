@@ -39,11 +39,6 @@ const { Content } = await render(project);
 
         <!-- Project header -->
         <div class="reveal" style="transition-delay: 0.1s;">
-          <div
-            class="text-[11px] uppercase tracking-[0.2em] mb-4 opacity-70"
-            style={`font-family: var(--font-mono); color: ${project.data.color};`}
-          ><span style="opacity:0.5;">// </span>{project.data.year}</div>
-
           <h1
             class="font-normal tracking-[-0.03em] leading-[1.03] text-[var(--color-text)] mb-3"
             style="font-family: var(--font-headline); font-size: clamp(44px, 7vw, 80px);"
@@ -256,10 +251,21 @@ const { Content } = await render(project);
   }
 
   // ── Convert image paragraphs → <figure> elements for full-bleed layout
+  let imgIndex = 0;
   document.querySelectorAll('.project-content p').forEach((p) => {
     const img = p.querySelector('img');
     if (img && p.children.length === 1) {
       const alt = img.getAttribute('alt') || '';
+
+      // First two images load eagerly at high priority; rest lazy
+      img.setAttribute('decoding', 'async');
+      if (imgIndex < 2) {
+        img.setAttribute('loading', 'eager');
+        img.setAttribute('fetchpriority', 'high');
+      } else {
+        img.setAttribute('loading', 'lazy');
+      }
+      imgIndex++;
 
       const figure = document.createElement('figure');
       figure.className = 'img-figure reveal-slow';
