@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import About from '../components/About.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+---
+
+<Base title="About — Daniel Bonavita" description="Senior Designer, 15+ years experience. Brazilian-Italian, based in London.">
+  <Nav activeSection="about" />
+
+  <main class="pt-32 max-md:pt-24">
+    <About />
+  </main>
+
+  <Footer />
+</Base>

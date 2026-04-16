@@ -1,0 +1,107 @@
+---
+---
+
+<section class="relative min-h-screen flex flex-col justify-end px-12 pb-20 max-md:px-6 max-md:pb-12 overflow-hidden">
+  <!-- Subtle grid overlay -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background-image: linear-gradient(rgba(240,237,230,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(240,237,230,0.025) 1px, transparent 1px); background-size: 80px 80px;"
+  ></div>
+
+  <!-- Vignette — pulls edges to black, focuses the eye inward -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: radial-gradient(ellipse 90% 85% at 50% 50%, transparent 35%, rgba(10,10,10,0.75) 100%);"
+  ></div>
+
+  <!-- Ambient accent glow — a breath of chartreuse at the content origin -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: radial-gradient(ellipse 55% 45% at 15% 78%, rgba(200,255,0,0.055), transparent 70%);"
+  ></div>
+
+  <div class="relative z-10 max-w-[1200px]">
+    <!-- Location + time -->
+    <div class="reveal" style="transition-delay: 0.1s;">
+      <div
+        class="mb-7 text-[12px] uppercase tracking-[0.2em] text-[var(--color-text)]/55"
+        style="font-family: var(--font-mono);"
+      >
+        London, UK — <span id="hero-time"></span>
+      </div>
+    </div>
+
+    <!-- Headline -->
+    <div class="reveal" style="transition-delay: 0.25s;">
+      <h1
+        class="mb-9 font-normal leading-[0.92] tracking-[-0.035em] text-[var(--color-text)]"
+        style="font-family: var(--font-headline); font-size: clamp(42px, 7.5vw, 112px);"
+      >
+        V<span class="accent-char">i</span>sual, Br<span class="accent-char">a</span>nding<br />
+        <span class="text-[var(--color-text)]/20">&</span>
+        Pr<span class="accent-char">o</span>duct D<span class="accent-char">e</span>sign
+      </h1>
+    </div>
+
+    <!-- Subhead -->
+    <div class="reveal" style="transition-delay: 0.4s;">
+      <p
+        class="mb-12 text-[20px] leading-[1.75] text-[var(--color-text)]/60 max-w-[560px] max-md:text-[17px]"
+        style="font-family: var(--font-body);"
+      >
+        Senior Designer with 15+ years shaping brands, systems,
+        and digital products — from startups to scale-ups,
+        NGOs to iGaming. Always with a digital-first mindset.
+      </p>
+    </div>
+
+    <!-- Tags -->
+    <div class="reveal" style="transition-delay: 0.55s;">
+      <div class="flex gap-10 items-center max-md:gap-6 max-md:flex-wrap">
+        <span
+          class="text-[11px] uppercase tracking-[0.15em] text-[var(--color-text)]/50"
+          style="font-family: var(--font-mono);"
+        >Branding</span>
+        <span
+          class="text-[11px] uppercase tracking-[0.15em] text-[var(--color-text)]/50"
+          style="font-family: var(--font-mono);"
+        >Design Systems</span>
+        <span
+          class="text-[11px] uppercase tracking-[0.15em] text-[var(--color-text)]/50"
+          style="font-family: var(--font-mono);"
+        >Figma</span>
+        <span
+          class="text-[10px] uppercase tracking-[0.15em] text-[var(--color-accent)]"
+          style="font-family: var(--font-mono);"
+        >AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 right-12 flex flex-col items-center gap-2 max-md:right-6">
+    <span
+      class="text-[9px] uppercase tracking-[0.2em] text-[var(--color-text)]/40"
+      style="font-family: var(--font-mono); writing-mode: vertical-rl;"
+    >[ scroll ]</span>
+    <div
+      class="scroll-pulse w-px h-10"
+      style="background: linear-gradient(180deg, rgba(240,237,230,0.25), transparent); animation: pulse 2s ease-in-out infinite;"
+    ></div>
+  </div>
+</section>
+
+<script>
+  function updateTime() {
+    const el = document.getElementById('hero-time');
+    if (!el) return;
+    const now = new Date();
+    el.textContent = now.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/London',
+    });
+  }
+  updateTime();
+  setInterval(updateTime, 60000);
+</script>

@@ -1,0 +1,218 @@
+---
+interface Props {
+  activeSection?: string;
+}
+
+const { activeSection = 'work' } = Astro.props;
+
+const sections = [
+  { label: 'Work', href: '/', key: 'work' },
+  { label: 'AI Gen', href: '/ai-gen', key: 'ai-gen' },
+  { label: 'About', href: '/about', key: 'about' },
+];
+
+const socials = [
+  { label: 'in', href: 'https://www.linkedin.com/in/danielbonavita/', ascii: '— LinkedIn —' },
+  { label: 'ig', href: 'https://www.instagram.com/danbnvt/', ascii: '— @danbnvt —' },
+  { label: 'be', href: 'https://www.behance.net/danielbonavita', ascii: '— Behance —' },
+];
+---
+
+<nav
+  id="main-nav"
+  class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center"
+  style="padding: 36px 48px; transition: padding 400ms cubic-bezier(0.16,1,0.3,1), background-color 300ms ease, backdrop-filter 300ms ease, border-color 300ms ease;"
+>
+  <!-- Logo -->
+  <a href="/" class="flex items-baseline gap-3 no-underline">
+    <span
+      class="text-[28px] leading-none tracking-[-0.02em]"
+      style="font-family: var(--font-headline); color: var(--color-text);"
+    >
+      D<span class="accent-char">a</span>niel Bon<span class="accent-char">a</span>vita
+    </span>
+  </a>
+
+  <!-- Nav links -->
+  <div class="flex gap-10 items-center">
+    {sections.map((item) => (
+      <a
+        href={item.href}
+        class:list={[
+          'nav-link relative px-1 py-2 no-underline uppercase tracking-[0.14em] text-[14px] transition-colors duration-300',
+          activeSection === item.key ? 'text-[var(--color-text)]' : 'text-[var(--color-text)]/55 hover:text-[var(--color-text)]',
+        ]}
+        style="font-family: var(--font-mono);"
+      >
+        {item.label}
+        {activeSection === item.key && (
+          <div
+            class="absolute bottom-0.5 left-1 right-1 h-px"
+            style="background: var(--color-accent);"
+          />
+        )}
+      </a>
+    ))}
+
+    <!-- Social icons -->
+    <div class="flex gap-4 ml-6 pl-7 border-l border-[var(--color-text)]/8">
+      {socials.map((s) => (
+        <a
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-icon relative w-8 h-8 rounded-full border border-[var(--color-text)]/15 flex items-center justify-center no-underline text-[10px] text-[var(--color-text)]/50 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+          style="font-family: var(--font-mono); transition: border-color 200ms ease-out, color 200ms ease-out;"
+        >
+          {s.label}
+          <span class="ascii-tip">{s.ascii}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <!-- Mobile menu button (hidden on desktop) -->
+  <button
+    id="mobile-menu-btn"
+    class="hidden max-md:flex flex-col gap-1.5 p-2 bg-transparent border-none cursor-pointer"
+    aria-label="Toggle menu"
+  >
+    <span class="block w-5 h-px bg-[var(--color-text)]/60" style="transition: background-color 200ms ease, transform 200ms ease;"></span>
+    <span class="block w-5 h-px bg-[var(--color-text)]/60" style="transition: background-color 200ms ease, transform 200ms ease;"></span>
+  </button>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-40 hidden flex-col items-center justify-center gap-8"
+  style="background: rgba(10,10,10,0.96); backdrop-filter: blur(20px);"
+>
+  {sections.map((item) => (
+    <a
+      href={item.href}
+      class="text-[var(--color-text)] no-underline text-2xl tracking-[0.1em] uppercase"
+      style="font-family: var(--font-mono);"
+    >
+      {item.label}
+    </a>
+  ))}
+  <div class="flex gap-4 mt-8">
+    {socials.map((s) => (
+      <a
+        href={s.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-10 h-10 rounded-full border border-[var(--color-text)]/15 flex items-center justify-center no-underline text-xs text-[var(--color-text)]/55"
+        style="font-family: var(--font-mono);"
+      >
+        {s.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  const nav = document.getElementById('main-nav');
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  // Glassmorphic nav on scroll
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY > 60;
+    if (nav) {
+      nav.style.padding = scrolled ? '20px 48px' : '36px 48px';
+      nav.style.backdropFilter = scrolled ? 'blur(20px) saturate(1.2)' : 'none';
+      nav.style.backgroundColor = scrolled ? 'rgba(10,10,10,0.82)' : 'transparent';
+      nav.style.borderBottom = scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none';
+    }
+  });
+
+  // ── Magnetic effects — fine pointer devices only (no touch)
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('.nav-link').forEach((link) => {
+      link.style.transition = 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s';
+
+      link.addEventListener('mousemove', (e) => {
+        const rect = link.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        link.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
+      });
+
+      link.addEventListener('mouseleave', () => {
+        link.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s';
+        link.style.transform = 'translate(0, 0)';
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>('.social-icon').forEach((icon) => {
+      icon.addEventListener('mousemove', (e) => {
+        const rect = icon.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        icon.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        icon.style.transition = 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)';
+      });
+
+      icon.addEventListener('mouseleave', () => {
+        icon.style.transform = 'translate(0, 0)';
+        icon.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      });
+    });
+  }
+
+  // Mobile menu toggle
+  menuBtn?.addEventListener('click', () => {
+    const isOpen = mobileMenu?.classList.contains('flex');
+    if (isOpen) {
+      mobileMenu?.classList.remove('flex');
+      mobileMenu?.classList.add('hidden');
+    } else {
+      mobileMenu?.classList.remove('hidden');
+      mobileMenu?.classList.add('flex');
+    }
+  });
+</script>
+
+<style>
+  /* ── ASCII tooltip on social icons ─────────────────── */
+  .ascii-tip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    transition: opacity 180ms ease-out, transform 180ms ease-out;
+  }
+
+  .social-icon:hover .ascii-tip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Hide desktop nav links on mobile, show hamburger */
+  @media (max-width: 767px) {
+    nav > div:nth-child(2) {
+      display: none;
+    }
+    #mobile-menu-btn {
+      display: flex !important;
+    }
+    nav {
+      padding: 24px 24px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    nav a span {
+      font-size: 22px !important;
+    }
+  }
+</style>

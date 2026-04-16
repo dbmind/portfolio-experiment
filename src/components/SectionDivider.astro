@@ -1,0 +1,25 @@
+---
+interface Props {
+  label: string;
+  count?: number;
+}
+
+const { label, count } = Astro.props;
+---
+
+<div class="px-12 max-md:px-6 flex items-center gap-4 mb-2">
+  <span
+    class="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text)]/50 whitespace-nowrap"
+    style="font-family: var(--font-mono);"
+  >{label}</span>
+  <div
+    class="flex-1 h-px"
+    style="background: linear-gradient(90deg, rgba(240,237,230,0.08), transparent);"
+  ></div>
+  {count && (
+    <span
+      class="text-[10px] text-[var(--color-text)]/40 tracking-[0.1em]"
+      style="font-family: var(--font-mono);"
+    >[ {count} ]</span>
+  )}
+</div>

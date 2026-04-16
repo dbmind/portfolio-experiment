@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+const images = [
+  { src: '/images/ai-gen/ai-sports.png', category: 'Sports', tool: 'Midjourney' },
+  { src: '/images/ai-gen/ai-fashion.png', category: 'Fashion', tool: 'Midjourney' },
+  { src: '/images/ai-gen/ai-typography.png', category: 'Typography', tool: 'Midjourney' },
+  { src: '/images/ai-gen/ai-objects.png', category: 'Objects', tool: 'Midjourney' },
+  { src: '/images/ai-gen/ai-architecture.svg', category: 'Architecture', tool: 'Midjourney' },
+  { src: '/images/ai-gen/ai-automotive.svg', category: 'Automotive', tool: 'Midjourney' },
+];
+
+const categories = ['All', ...new Set(images.map((i) => i.category))];
+---
+
+<Base title="AI Gen — Daniel Bonavita" description="AI-generated imagery. No post-processing. Midjourney explorations across sports, fashion, typography, and more.">
+  <Nav activeSection="ai-gen" />
+
+  <main class="pt-32 max-md:pt-24">
+    <section class="py-[120px] px-12 max-md:px-6 max-md:py-16">
+      <!-- Section header -->
+      <div class="reveal flex items-end justify-between mb-[60px] max-md:flex-col max-md:items-start max-md:gap-6">
+        <div>
+          <div
+            class="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text)]/50 mb-4"
+            style="font-family: var(--font-mono);"
+          >AI Exploration</div>
+          <h2
+            class="font-normal tracking-[-0.03em] leading-none text-[var(--color-text)]"
+            style="font-family: var(--font-headline); font-size: clamp(40px, 5vw, 64px);"
+          >
+            A<span class="accent-char">I</span> G<span class="accent-char">e</span>n
+          </h2>
+        </div>
+        <div class="max-w-[380px]">
+          <p
+            class="text-[16px] leading-[1.75] text-[var(--color-text)]/55 text-right max-md:text-left"
+            style="font-family: var(--font-body);"
+          >
+            All visuals are AI-generated — no post-processing.
+            A raw look at what's possible when strong prompting meets the right tools.
+          </p>
+        </div>
+      </div>
+
+      <!-- Filter pills -->
+      <div class="reveal flex gap-2 mb-10 flex-wrap" style="transition-delay: 0.2s;" id="filter-pills">
+        {categories.map((cat) => (
+          <button
+            class="filter-pill px-4 py-[7px] rounded-full text-[10px] uppercase tracking-[0.12em] cursor-pointer border"
+            style="transition: color 180ms ease-out, border-color 180ms ease-out, background-color 180ms ease-out;"
+            style="font-family: var(--font-mono);"
+            data-category={cat}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <!-- Masonry grid -->
+      <div id="ai-grid" class="columns-3 gap-4 max-md:columns-2 max-sm:columns-1">
+        {images.map((img) => (
+          <div
+            class="ai-card break-inside-avoid mb-4 rounded-md overflow-hidden relative cursor-pointer group"
+            data-category={img.category}
+          >
+            <img
+              src={img.src}
+              alt={img.category}
+              class="w-full block brightness-[0.88] group-hover:brightness-[1.08] group-hover:scale-[1.02]"
+              style="transition: filter 350ms ease-out, transform 400ms cubic-bezier(0.16, 1, 0.3, 1);"
+              loading="lazy"
+            />
+            <!-- Hover overlay -->
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col justify-end p-5"
+              style="transition: opacity 250ms ease-out;"
+              style="background: linear-gradient(180deg, transparent 50%, rgba(10,10,10,0.85) 100%);"
+            >
+              <div
+                class="text-[10px] uppercase tracking-[0.15em] text-[var(--color-accent)] mb-1"
+                style="font-family: var(--font-mono);"
+              >{img.category}</div>
+              <div
+                class="text-[9px] tracking-[0.1em] text-[var(--color-text)]/65"
+                style="font-family: var(--font-mono);"
+              >{img.tool} &bull; No post-processing</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<script>
+  const pills = document.querySelectorAll('.filter-pill');
+  const cards = document.querySelectorAll('.ai-card');
+
+  function setActiveFilter(category: string) {
+    pills.forEach((pill) => {
+      const isActive = pill.getAttribute('data-category') === category;
+      if (isActive) {
+        (pill as HTMLElement).style.background = 'rgba(200,255,0,0.1)';
+        (pill as HTMLElement).style.borderColor = 'rgba(200,255,0,0.3)';
+        (pill as HTMLElement).style.color = '#C8FF00';
+      } else {
+        (pill as HTMLElement).style.background = 'transparent';
+        (pill as HTMLElement).style.borderColor = 'rgba(240,237,230,0.08)';
+        (pill as HTMLElement).style.color = 'rgba(240,237,230,0.55)';
+      }
+    });
+
+    cards.forEach((card) => {
+      const el = card as HTMLElement;
+      const cardCat = el.getAttribute('data-category');
+      const visible = category === 'All' || cardCat === category;
+
+      if (visible) {
+        el.style.display = '';
+        // Allow display to take effect before fading in
+        requestAnimationFrame(() => {
+          el.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
+          el.style.opacity = '1';
+          el.style.transform = 'scale(1)';
+        });
+      } else {
+        el.style.transition = 'opacity 150ms ease-out, transform 150ms ease-out';
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.97)';
+        setTimeout(() => {
+          if (el.style.opacity === '0') el.style.display = 'none';
+        }, 160);
+      }
+    });
+  }
+
+  // Set initial state
+  setActiveFilter('All');
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const cat = pill.getAttribute('data-category') || 'All';
+      setActiveFilter(cat);
+    });
+  });
+</script>

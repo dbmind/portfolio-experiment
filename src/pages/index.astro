@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import SectionDivider from '../components/SectionDivider.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base>
+  <Nav activeSection="work" />
+
+  <main>
+    <Hero />
+    <SectionDivider label="Selected Work" count={projects.length} />
+    <section>
+      {projects.map((project, i) => (
+        <ProjectCard
+          title={project.data.title}
+          subtitle={project.data.subtitle}
+          year={project.data.year}
+          tags={project.data.tags}
+          description={project.data.description}
+          color={project.data.color}
+          image={project.data.image}
+          slug={project.id}
+          index={i}
+        />
+      ))}
+    </section>
+  </main>
+
+  <Footer />
+</Base>

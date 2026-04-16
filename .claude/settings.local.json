@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$HOME/.nvm/versions/node/*/bin:$HOME/.volta/bin:$HOME/.fnm/aliases/default/bin:$PATH\")",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(mdfind -name node -onlyin /usr/local)",
+      "Bash(source ~/.zshrc)",
+      "Bash(npm --version)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\")",
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "Read(//private/tmp/**)",
+      "Bash(rm -rf astro-scaffold)",
+      "Bash(npx astro:*)",
+      "Bash(npm install:*)",
+      "Bash(curl -v \"https://images.squarespace-cdn.com/content/v1/68850db5d79bee1692c883e0/16b3f2e0-a3e0-4cba-ae15-b2740b76af1e/Cover-4b3.png?format=1500w\")",
+      "Bash(npm run:*)",
+      "Bash(identify /Users/danielbonavita/Claude/portfolio-experiment/public/images/projects/paul-read.png)",
+      "Bash(mv apart-of-me.png apart-of-me.webp)",
+      "Bash(mv pen-pal.png pen-pal.webp)",
+      "Bash(mv paul-read.png paul-read.webp)",
+      "mcp__mcp-registry__search_mcp_registry",
+      "Bash(python3 /Users/danielbonavita/.claude/skills/ui-ux-pro-max/scripts/search.py \"portfolio senior designer dark editorial minimal branding\" --design-system -p \"Daniel Bonavita Portfolio\")"
+    ]
+  }
+}

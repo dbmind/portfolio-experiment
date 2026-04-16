@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────── */
+@theme {
+  --color-bg: #0A0A0A;
+  --color-text: #F0EDE6;
+  --color-accent: #C8FF00;
+
+  --font-headline: 'Instrument Serif', Georgia, serif;
+  --font-display: 'Playfair Display', serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-body: 'DM Sans', Helvetica, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── BASE ──────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Warm radial at top-center — breaks the flat black with depth */
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(240,237,230,0.028), transparent 70%),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ─── CUSTOM SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(240, 237, 230, 0.08);
+  border-radius: 2px;
+}
+
+/* ─── SCROLL REVEAL ─────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-slow {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo);
+}
+
+.reveal-slow.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── REDUCED MOTION ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-slow {
+    transform: none;
+    transition: opacity 0.3s ease;
+  }
+
+  body {
+    animation: none;
+  }
+
+  .scroll-pulse {
+    animation: none !important;
+  }
+}
+
+/* ─── SCROLL INDICATOR PULSE ────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* ─── PAGE ENTRY ────────────────────────────────────────────────── */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  animation: page-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── FILM GRAIN ────────────────────────────────────────────────── */
+/*
+  SVG feTurbulence noise tiled at 256px — rendered once, GPU-composited.
+  mix-blend-mode: overlay adds contrast into the grain rather than just
+  brightening, which reads as texture rather than wash.
+*/
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  opacity: 0.038;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  will-change: transform; /* promote to own compositor layer */
+}
+
+/* ─── PLAYFAIR ACCENT ───────────────────────────────────────────── */
+.accent-char {
+  font-family: var(--font-display);
+  font-style: italic;
+  display: inline;
+}

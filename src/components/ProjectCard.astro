@@ -1,0 +1,222 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  year: string;
+  tags: string[];
+  description: string;
+  color: string;
+  image: string;
+  slug: string;
+  index: number;
+}
+
+const { title, subtitle, year, tags, description, color, image, slug, index } = Astro.props;
+const isEven = index % 2 === 0;
+---
+
+<a
+  href={`/work/${slug}`}
+  class="project-card reveal-slow block no-underline border-b border-[var(--color-text)]/5 p-12 max-md:p-6 relative overflow-hidden"
+  style={`transition-delay: ${Math.min(index, 4) * 0.06}s;`}
+  data-color={color}
+>
+  <!-- Spotlight glow — follows cursor -->
+  <div class="card-spotlight" aria-hidden="true"></div>
+  <div class:list={[
+    'grid gap-12 max-md:grid-cols-1 max-md:gap-6',
+    isEven ? 'grid-cols-[1.3fr_1fr]' : 'grid-cols-[1fr_1.3fr]',
+  ]}>
+    <!-- Image -->
+    <div class:list={[
+      'card-image-wrap rounded-md overflow-hidden relative transition-transform duration-600',
+      isEven ? 'order-0' : 'order-1 max-md:order-0',
+    ]}
+    style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);"
+    >
+      <img
+        src={image}
+        alt={title}
+        class="card-image w-full h-full object-cover block aspect-[16/10] transition-[filter,opacity] duration-500 opacity-0"
+        style="filter: brightness(0.92);"
+        loading="lazy"
+      />
+      <!-- Skeleton loader -->
+      <div class="image-skeleton absolute inset-0 aspect-[16/10]" style={`--skeleton-accent: ${color};`}>
+        <div class="skeleton-shimmer"></div>
+      </div>
+      <div
+        class="absolute inset-0 pointer-events-none"
+        style={`background: linear-gradient(135deg, ${color}10, transparent 60%);`}
+      ></div>
+    </div>
+
+    <!-- Content -->
+    <div class:list={[
+      'flex flex-col justify-center',
+      isEven ? 'order-1 pl-4 max-md:pl-0' : 'order-0 pr-4 max-md:pr-0 max-md:order-1',
+    ]}>
+      <div
+        class="text-[10px] uppercase tracking-[0.2em] mb-3 opacity-60"
+        style={`font-family: var(--font-mono); color: ${color};`}
+      ><span style="opacity:0.5;">// </span>{year}</div>
+
+      <h2
+        class="text-[var(--color-text)] font-normal tracking-[-0.02em] leading-[1.1] mb-1"
+        style="font-family: var(--font-headline); font-size: clamp(28px, 3.2vw, 40px);"
+      >{title}</h2>
+
+      <h3
+        class="text-[16px] font-normal text-[var(--color-text)]/55 mb-4"
+        style="font-family: var(--font-body);"
+      >{subtitle}</h3>
+
+      <p
+        class="text-[15px] leading-[1.75] text-[var(--color-text)]/55 mb-5 max-w-[400px]"
+        style="font-family: var(--font-body);"
+      >{description}</p>
+
+      <div class="flex gap-1.5 flex-wrap">
+        {tags.map((tag) => (
+          <span
+            class="text-[9px] uppercase tracking-[0.1em] text-[var(--color-text)]/45 px-2 py-1 border border-[var(--color-text)]/12 rounded-sm"
+            style="font-family: var(--font-mono);"
+          >{tag}</span>
+        ))}
+      </div>
+
+      <div class="card-cta mt-6 flex items-center gap-2 opacity-0 -translate-x-2" style="transition: opacity 150ms ease-out, transform 150ms ease-out;">
+        <span
+          class="text-[10px] uppercase tracking-[0.15em]"
+          style={`font-family: var(--font-mono); color: ${color};`}
+        >View project</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke={color} stroke-width="1.2" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  .project-card:hover .card-image-wrap {
+    transform: scale(1.015);
+  }
+  .project-card:hover .card-image {
+    filter: brightness(1.05) !important;
+  }
+
+  /* Enter: deliberate. Exit: snappy. */
+  .project-card:hover .card-cta {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* Press feedback */
+  .project-card:active {
+    transform: scale(0.99);
+    transition: transform 100ms ease-out !important;
+  }
+
+  /* ── Spotlight ─────────────────────────────── */
+  .card-spotlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+    background: radial-gradient(
+      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--spot-color, rgba(200,255,0,0.07)),
+      transparent 65%
+    );
+    z-index: 0;
+  }
+
+  .project-card:hover .card-spotlight {
+    opacity: 1;
+  }
+
+  /* Keep card content above the spotlight layer */
+  .project-card > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Image skeleton loader ───────────────────── */
+  .image-skeleton {
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    z-index: 1;
+    transition: opacity 0.4s ease-out;
+  }
+
+  .skeleton-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.04) 20%,
+      rgba(255, 255, 255, 0.06) 50%,
+      rgba(255, 255, 255, 0.04) 80%,
+      transparent 100%
+    );
+    animation: shimmer 1.8s ease-in-out infinite;
+    transform: translateX(-100%);
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Hide skeleton when image loads */
+  .card-image.loaded {
+    opacity: 1 !important;
+  }
+
+  .card-image.loaded ~ .image-skeleton,
+  .card-image-wrap:has(.card-image.loaded) .image-skeleton {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.project-card').forEach((card) => {
+    const spotlight = card.querySelector<HTMLElement>('.card-spotlight');
+    if (!spotlight) return;
+
+    // Derive spotlight colour from the card's accent colour
+    const hex = card.dataset.color || '#C8FF00';
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    spotlight.style.setProperty('--spot-color', `rgba(${r},${g},${b},0.08)`);
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', `${x}%`);
+      card.style.setProperty('--mouse-y', `${y}%`);
+    });
+  });
+
+  // Image load detection for skeleton fade-out
+  document.querySelectorAll<HTMLImageElement>('.card-image').forEach((img) => {
+    const markLoaded = () => img.classList.add('loaded');
+
+    if (img.complete && img.naturalHeight !== 0) {
+      markLoaded();
+    } else {
+      img.addEventListener('load', markLoaded);
+    }
+  });
+</script>
